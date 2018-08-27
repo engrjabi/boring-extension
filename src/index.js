@@ -6,15 +6,18 @@ import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 import configureStore from './configureStore';
+import { PersistGate } from 'redux-persist/integration/react'
 
 const initialState = {};
 const history = createHistory();
-const store = configureStore(initialState, history);
+const { store, persistor } = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('root');
 
 ReactDOM.render(
 	<Provider store={store}>
-		<App/>
+		<PersistGate loading={null} persistor={persistor}>
+			<App/>
+		</PersistGate>
 	</Provider>,
 	MOUNT_NODE,
 );
