@@ -12,6 +12,7 @@
     "react-dom": "^16.4.2",
     "react-moment": "^0.7.9",
     "react-redux": "^5.0.7",
+    "react-redux-form": "^1.16.10",
     "react-router-redux": "^4.0.8",
     "react-scripts": "1.1.5",
     "redux": "^4.0.0",
