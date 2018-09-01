@@ -61,7 +61,7 @@ class MainDateDisplay extends Component {
 					<Moment
 						interval={60000}
 						onClick={this.handleCopyDate}
-						format="[Week] WW | MMMM DD, YYYY | hh:mm A"
+						format="[Week] WW | MMM DD, YYYY | hh:mm A"
 					/>
 				</Typography>
 
