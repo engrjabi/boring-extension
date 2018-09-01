@@ -33,13 +33,15 @@ export const styles = theme => ({
     width: '100%',
     height: '100%',
     position: 'absolute',
-    opacity: '0',
-    transition: 'all 300ms linear',
     zIndex: '1',
-    '&:hover': {
-      opacity: '0.8',
-    },
   },
+	avatarWrapperHoverEffect: {
+		opacity: '0',
+		transition: 'all 300ms linear',
+		'&:hover': {
+			opacity: '0.8',
+		},
+	},
   avatar: {
     backgroundColor: red[500],
     width: '60px',
