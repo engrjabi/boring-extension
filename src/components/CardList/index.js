@@ -5,15 +5,27 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { styles } from './styles';
 import { preventDefaultEvent } from '../../utils/browserCommands';
-import 'whatwg-fetch';
+import GenericMenu from '../GenericMenu';
 
 class CardList extends Component {
+
+	handleCardRedirect = (link) => {
+		alert(link);
+		// window.location.href = 'https://www.google.com';
+	};
+
+	handleEdit = (card) => {
+		console.log('editing', card);
+	};
+
+	handleDelete = (card) => {
+		console.log('deleting', card);
+	};
 
 	render() {
     const { classes, cardList } = this.props;
@@ -28,6 +40,7 @@ class CardList extends Component {
 				        <ButtonBase
 					        focusRipple
 					        className={classes.buttonWrapper}
+					        onClick={() => this.handleCardRedirect(tile.title)}
 					        focusVisibleClassName={classes.focusVisible}>
 
 					        <div className={`${classes.avatarWrapper} ${doesImgExists ? classes.avatarWrapperHoverEffect : ''}`}>
@@ -52,13 +65,24 @@ class CardList extends Component {
                       <FavoriteIcon/> {tile.launched}
                     </span>
 						        }
-						        actionIcon={
-							        <IconButton className={classes.icon}>
-								        <MoreVertIcon/>
-							        </IconButton>
-						        }
 					        />
 				        </ButtonBase>
+
+				        <GenericMenu
+					        className={classes.moreOptionsIcon}
+					        menuIcon={(<MoreVertIcon/>)}
+					        id={`classes.root-${indexId}`}
+					        menuItems={[
+						        {
+							        label: 'Edit',
+							        clickAction: () => this.handleEdit(tile),
+						        },
+						        {
+							        label: 'Delete',
+							        clickAction: () => this.handleDelete(tile),
+						        },
+					        ]}
+				        />
 			        </GridListTile>
 		        )
 	        })}

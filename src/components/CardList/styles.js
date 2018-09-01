@@ -26,8 +26,12 @@ export const styles = theme => ({
       width: '12.5% !important',
     },
   },
-  icon: {
+	moreOptionsIcon: {
     color: 'rgba(255, 255, 255, 0.54)',
+		position: 'absolute',
+		bottom: 0,
+		right: 0,
+		zIndex: 2,
   },
   avatarWrapper: {
     width: '100%',
