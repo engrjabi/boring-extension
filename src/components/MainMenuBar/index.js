@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getRandomImage } from '../../utils/randomGenerator';
 import GenericMenu from '../GenericMenu';
+import GenericModal from '../GenericModal';
 
 const styles = () => ({
 	root: {},
@@ -12,9 +12,21 @@ class MainMenuBar extends Component {
 
 	static defaultProps = {};
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			openModal: false,
+		}
+	}
+
 	handleAddCard = () => {
 		const { addACard } = this.props;
-		addACard({ title: 'Added', launched: '32', img: getRandomImage() });
+		// addACard({ title: 'Added', launched: '32', img: getRandomImage() });
+		this.setState({ openModal: true });
+	};
+
+	handleCloseModal = () => {
+		this.setState({ openModal: false });
 	};
 
 	handleExportSettings = () => {
@@ -27,26 +39,35 @@ class MainMenuBar extends Component {
 
 	render() {
 		const { classes } = this.props;
+		const { openModal } = this.state;
 
 		return (
-			<GenericMenu
-				className={classes.root}
-				id={`${classes.root}-id`}
-				menuItems={[
-					{
-						label: 'Add Shortcut',
-						clickAction: this.handleAddCard,
-					},
-					{
-						label: 'Export Settings',
-						clickAction: this.handleExportSettings,
-					},
-					{
-						label: 'Import Settings',
-						clickAction: this.handleImportSettings,
-					},
-				]}
-			/>
+			<div>
+				<GenericMenu
+					className={classes.root}
+					id={`${classes.root}-id`}
+					menuItems={[
+						{
+							label: 'Add Shortcut',
+							clickAction: this.handleAddCard,
+						},
+						{
+							label: 'Export Settings',
+							clickAction: this.handleExportSettings,
+						},
+						{
+							label: 'Import Settings',
+							clickAction: this.handleImportSettings,
+						},
+					]}
+				/>
+
+				<GenericModal
+					openStatus={openModal}
+					handleClose={this.handleCloseModal}>
+					Form goes in here
+				</GenericModal>
+			</div>
 		);
 	}
 }
