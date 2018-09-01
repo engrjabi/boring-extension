@@ -71,7 +71,7 @@ class CardList extends Component {
 				        <GenericMenu
 					        className={classes.moreOptionsIcon}
 					        menuIcon={(<MoreVertIcon/>)}
-					        id={`classes.root-${indexId}`}
+					        id={`${classes.root}-${indexId}`}
 					        menuItems={[
 						        {
 							        label: 'Edit',
