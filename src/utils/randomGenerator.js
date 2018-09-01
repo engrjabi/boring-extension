@@ -3,3 +3,8 @@ export function getRandomInt(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 }
+
+export function getRandomImage() {
+	const imageRepoURL = 'https://picsum.photos/240/180';
+	return `${imageRepoURL}?sig=${getRandomInt(1, 10000,)}`;
+}
