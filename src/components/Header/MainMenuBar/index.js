@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import GenericMenu from '../../GenericComponents/GenericMenu/index';
 import GenericModal from '../../GenericComponents/GenericModal/index';
-import BasicForm from '../AddShortcutForm';
+import AddShortcutForm from '../AddShortcutForm';
 
 const styles = () => ({
 	root: {},
@@ -21,8 +21,6 @@ class MainMenuBar extends Component {
 	}
 
 	handleAddCard = () => {
-		const { addACard } = this.props;
-		// addACard({ title: 'Added', launched: '32', img: getRandomImage() });
 		this.setState({ openModal: true });
 	};
 
@@ -39,7 +37,7 @@ class MainMenuBar extends Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, addACard } = this.props;
 		const { openModal } = this.state;
 
 		return (
@@ -66,7 +64,10 @@ class MainMenuBar extends Component {
 				<GenericModal
 					openStatus={openModal}
 					handleClose={this.handleCloseModal}>
-					<BasicForm/>
+					<AddShortcutForm
+						addACard={addACard}
+						closeModal={this.handleCloseModal}
+					/>
 				</GenericModal>
 			</div>
 		);

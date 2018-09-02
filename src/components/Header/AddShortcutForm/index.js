@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
 import GenericTextField from '../../GenericComponents/GenericTextField';
 import { arePropertiesAreEmpty, validateFormInput } from '../../../utils/checkers';
+import { getRandomImage } from '../../../utils/randomGenerator';
 
 const styles = theme => ({
 	textField: {
@@ -31,7 +32,7 @@ const styles = theme => ({
 	}
 });
 
-class Basic extends Component {
+class AddShortcutForm extends Component {
 
 	static defaultProps = {};
 
@@ -45,17 +46,17 @@ class Basic extends Component {
 	handleValidation = (values) => {
 		let errors = {};
 
-		errors.title = validateFormInput(values.title, ['required', 'email']);
+		errors.title = validateFormInput(values.title, ['required']);
 		errors.imgURL = validateFormInput(values.imgURL, ['required']);
 
 		return arePropertiesAreEmpty(errors) ? {} : errors;
 	};
 
 	handleSubmit = (values, methods) => {
-		console.log('submit action', {
-			values,
-			methods,
-		});
+		const { addACard, closeModal } = this.props;
+		const { title, imgURL } = values;
+		addACard({ title: title, launched: '0', img: getRandomImage() });
+		closeModal();
 	};
 
 	render() {
@@ -113,8 +114,8 @@ class Basic extends Component {
 	}
 }
 
-Basic.propTypes = {
+AddShortcutForm.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Basic);
+export default withStyles(styles)(AddShortcutForm);
