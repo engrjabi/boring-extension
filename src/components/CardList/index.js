@@ -15,7 +15,10 @@ import GenericMenu from '../GenericComponents/GenericMenu';
 
 class CardList extends Component {
 
-	handleCardRedirect = (link) => {
+	handleCardRedirect = (tile) => {
+		const { updateClicker } = this.props;
+		const { link, title } = tile;
+		updateClicker(title);
 		window.location = formatLink(link);
 	};
 
@@ -41,7 +44,7 @@ class CardList extends Component {
 				        <ButtonBase
 					        focusRipple
 					        className={classes.buttonWrapper}
-					        onClick={() => this.handleCardRedirect(tile.link)}
+					        onClick={() => this.handleCardRedirect(tile)}
 					        focusVisibleClassName={classes.focusVisible}>
 
 					        <div className={`${classes.avatarWrapper} ${doesImgExists ? classes.avatarWrapperHoverEffect : ''}`}>

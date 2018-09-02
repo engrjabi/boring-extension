@@ -32,6 +32,19 @@ function homeReducer(state = initialState, action) {
 			  ...state,
 			  cardList: state.cardList.filter(card => card.title !== action.cardTitle),
 		  };
+	  case types.UPDATE_CLICKER:
+		  return {
+			  ...state,
+			  cardList: state.cardList.map(card => {
+				  if (card.title === action.cardTitle) {
+					  return {
+						  ...card,
+						  launched: String(Number(card.launched) + 1),
+					  }
+				  }
+				  return card;
+			  }),
+		  };
     default:
       return state;
   }
