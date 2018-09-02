@@ -83,7 +83,7 @@ class AddShortcutForm extends Component {
 								delayFocus={true}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
-								error={Boolean(touched.title && errors.title)}
+								error={Boolean(isSubmitting && touched.title && errors.title)}
 								value={values.title}
 								errorMessage={errors.title}
 							/>
