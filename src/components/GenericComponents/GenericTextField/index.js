@@ -32,6 +32,7 @@ class GenericTextField extends Component {
 					onBlur={handleBlur}
 					value={value}
 					margin="normal"
+					autoComplete='off'
 				/>
 				{error &&
 				<FormHelperText className={classNames(classes.textField, classes.errorRemark)}>
