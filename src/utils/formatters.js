@@ -5,3 +5,14 @@ export function sortObjKeysAlphabetically(obj) {
 	});
 	return ordered;
 }
+
+export const formatLink = (link) => {
+	const httpRegex = RegExp('^https?://', 'g');
+	const isHttpProtocolFound = httpRegex.test(link);
+
+	if (isHttpProtocolFound) {
+		return link;
+	} else {
+		return `https://${link}`;
+	}
+};
