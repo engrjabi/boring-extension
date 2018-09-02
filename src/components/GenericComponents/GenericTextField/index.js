@@ -26,7 +26,7 @@ class GenericTextField extends Component {
 	componentDidMount() {
 		const { delayFocus } = this.props;
 		if (delayFocus) {
-			setTimeout(() => this.referenceField.focus(), 265);
+			setTimeout(() => this.referenceField.focus(), 280);
 		}
 	}
 
