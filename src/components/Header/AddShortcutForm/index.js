@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import TextField from '@material-ui/core/TextField';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import red from '@material-ui/core/colors/red';
-import classNames from 'classnames';
+import GenericTextField from '../../GenericComponents/GenericTextField';
+import { arePropertiesAreEmpty, validateFormInput } from '../../../utils/checkers';
 
 const styles = theme => ({
 	textField: {
@@ -33,35 +32,40 @@ const styles = theme => ({
 });
 
 class Basic extends Component {
+
+	static defaultProps = {};
+
+	generateInitialFormValues = () => {
+		return {
+			title: '',
+			imgURL: '',
+		}
+	};
+
+	handleValidation = (values) => {
+		let errors = {};
+
+		errors.title = validateFormInput(values.title, ['required', 'email']);
+		errors.imgURL = validateFormInput(values.imgURL, ['required']);
+
+		return arePropertiesAreEmpty(errors) ? {} : errors;
+	};
+
+	handleSubmit = (values, methods) => {
+		console.log('submit action', {
+			values,
+			methods,
+		});
+	};
+
 	render() {
 		const { classes } = this.props;
 		return (
 			<div>
 				<Formik
-					initialValues={{
-						title: '',
-						imgURL: '',
-					}}
-					validate={values => {
-						// same as above, but feel free to move this into a class method now.
-						let errors = {};
-						if (!values.title) {
-							errors.title = 'Required';
-						} else if (
-							!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.title)
-						) {
-							errors.title = 'Invalid email address';
-						}
-						return errors;
-					}}
-					onSubmit={(
-						values,
-						{ setSubmitting, setErrors /* setValues and other goodies */ }
-					) => {
-						console.log('submiting form', {
-							values,
-						});
-					}}
+					initialValues={this.generateInitialFormValues()}
+					validate={this.handleValidation}
+					onSubmit={this.handleSubmit}
 					render={({
 						         values,
 						         errors,
@@ -72,40 +76,29 @@ class Basic extends Component {
 						         isSubmitting,
 					         }) => (
 						<form onSubmit={handleSubmit}>
-
-							<TextField
-								required
+							<GenericTextField
 								label="Title"
 								name="title"
-								error={touched.title && errors.title}
-								className={classes.textField}
-								onChange={handleChange}
-								onBlur={handleBlur}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								error={Boolean(touched.title && errors.title)}
 								value={values.title}
-								margin="normal"
+								errorMessage={errors.title}
 							/>
-							{touched.title && errors.title &&
-							<FormHelperText className={classNames(classes.textField, classes.errorRemark)}>
-								{errors.title}
-							</FormHelperText>}
 
-							<TextField
-								required
+							<GenericTextField
 								label="Image URL"
 								name="imgURL"
-								className={classes.textField}
-								onChange={handleChange}
-								onBlur={handleBlur}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								error={Boolean(touched.imgURL && errors.imgURL)}
 								value={values.imgURL}
-								margin="normal"
+								errorMessage={errors.imgURL}
 							/>
-							{touched.imgURL && errors.imgURL &&
-							<FormHelperText className={classNames(classes.textField, classes.errorRemark)}>
-								{errors.imgURL}
-							</FormHelperText>}
 
 							<div className={classes.submitButtonWrapper}>
-								<Button variant="contained" color="primary" className={classes.button} type="submit"
+								<Button variant="contained" color="primary"
+								        className={classes.button} type="submit"
 								        disabled={isSubmitting}>
 									<AddIcon className={classes.leftIcon}/>
 									Add
