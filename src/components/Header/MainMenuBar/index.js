@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import GenericMenu from '../../GenericComponents/GenericMenu/index';
 import GenericModal from '../../GenericComponents/GenericModal/index';
+import BasicForm from '../AddShortcutForm';
 
 const styles = () => ({
 	root: {},
@@ -65,7 +66,7 @@ class MainMenuBar extends Component {
 				<GenericModal
 					openStatus={openModal}
 					handleClose={this.handleCloseModal}>
-					Form goes in here
+					<BasicForm/>
 				</GenericModal>
 			</div>
 		);
