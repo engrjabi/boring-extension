@@ -27,6 +27,11 @@ function homeReducer(state = initialState, action) {
 	      ...state,
 	      cardList: [...state.cardList, action.dataDetails],
       };
+	  case types.REMOVE_CARD:
+		  return {
+			  ...state,
+			  cardList: state.cardList.filter(card => card.title !== action.cardTitle),
+		  };
     default:
       return state;
   }

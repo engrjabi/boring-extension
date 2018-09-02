@@ -22,11 +22,16 @@ import Header from '../../components/Header';
 /* eslint-disable react/prefer-stateless-function */
 class HomePage extends React.PureComponent {
   render() {
-    const { addACard, cardList } = this.props;
+    const { addACard, cardList, removeACard } = this.props;
     return (
       <div>
-        <Header addACard={addACard} />
-        <CardList cardList={cardList} />
+        <Header
+	        addACard={addACard}
+        />
+        <CardList
+	        cardList={cardList}
+	        removeACard={removeACard}
+        />
       </div>
     );
   }
@@ -43,6 +48,7 @@ HomePage.propTypes = {
 
 export const mapDispatchToProps = {
   addACard: actions.addACard,
+	removeACard: actions.removeACard,
 };
 
 const mapStateToProps = createStructuredSelector({
