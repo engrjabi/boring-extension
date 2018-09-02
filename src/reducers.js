@@ -5,7 +5,7 @@
 import { combineReducers } from 'redux';
 // import { fromJS } from 'immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import homeReducer from './containers/HomePage/reducer';
+import globalReducer from './globalReducerImporter';
 
 /*
  * routeReducer
@@ -42,7 +42,7 @@ export function routeReducer(state = routeInitialState, action) {
 export default function createReducer(injectedReducers) {
 	return combineReducers({
 		route: routeReducer,
-		home: homeReducer,
+		...globalReducer,
 		...injectedReducers,
 	});
 }
