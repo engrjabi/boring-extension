@@ -3,9 +3,8 @@
  */
 
 import { createSelector } from 'reselect';
-import { initialState } from './reducer';
 
-const selectHome = state => state.home;
+const selectHome = state => state.dashboardReducer;
 
 const makeSelectCardList = () =>
   createSelector(selectHome, homeState => homeState.cardList);
