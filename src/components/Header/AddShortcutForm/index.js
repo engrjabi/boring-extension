@@ -40,6 +40,7 @@ class AddShortcutForm extends Component {
 		return {
 			title: '',
 			imgURL: '',
+			link: '',
 		}
 	};
 
@@ -48,14 +49,15 @@ class AddShortcutForm extends Component {
 
 		errors.title = validateFormInput(values.title, ['required']);
 		errors.imgURL = validateFormInput(values.imgURL, ['required']);
+		errors.link = validateFormInput(values.link, ['required']);
 
 		return arePropertiesAreEmpty(errors) ? {} : errors;
 	};
 
 	handleSubmit = (values, methods) => {
 		const { addACard, closeModal } = this.props;
-		const { title, imgURL } = values;
-		addACard({ title: title, launched: '0', img: getRandomImage() });
+		const { title, imgURL, link } = values;
+		addACard({ title: title, launched: '0', img: getRandomImage(), link, });
 		closeModal();
 	};
 
@@ -98,6 +100,16 @@ class AddShortcutForm extends Component {
 								errorMessage={errors.imgURL}
 							/>
 
+							<GenericTextField
+								label="Link"
+								name="link"
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								error={Boolean(touched.link && errors.link)}
+								value={values.link}
+								errorMessage={errors.link}
+							/>
+
 							<div className={classes.submitButtonWrapper}>
 								<Button variant="contained" color="primary"
 								        className={classes.button} type="submit"
@@ -106,7 +118,6 @@ class AddShortcutForm extends Component {
 									Add
 								</Button>
 							</div>
-
 						</form>
 					)}
 				/>
