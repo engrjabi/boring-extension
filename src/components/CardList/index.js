@@ -10,7 +10,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { styles } from './styles';
 import { preventDefaultEvent } from '../../utils/browserCommands';
-import GenericMenu from '../GenericMenu';
+import GenericMenu from '../GenericComponents/GenericMenu';
 
 class CardList extends Component {
 

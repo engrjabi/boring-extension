@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Moment from 'react-moment';
-import { copyToClipboard } from '../../utils/browserCommands';
+import { copyToClipboard } from '../../../utils/browserCommands';
 
 const styles = theme => ({
 	root: {

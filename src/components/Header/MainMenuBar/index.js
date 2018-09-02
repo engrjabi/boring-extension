@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import GenericMenu from '../GenericMenu';
-import GenericModal from '../GenericModal';
+import GenericMenu from '../../GenericComponents/GenericMenu/index';
+import GenericModal from '../../GenericComponents/GenericModal/index';
 
 const styles = () => ({
 	root: {},
