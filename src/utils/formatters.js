@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function sortObjKeysAlphabetically(obj) {
 	let ordered = {};
 	Object.keys(obj).sort().forEach(function (key) {
