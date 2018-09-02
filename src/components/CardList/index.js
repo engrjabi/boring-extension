@@ -24,7 +24,8 @@ class CardList extends Component {
 	};
 
 	handleDelete = (card) => {
-		console.log('deleting', card);
+		const { removeACard } = this.props;
+		removeACard(card.title);
 	};
 
 	render() {
