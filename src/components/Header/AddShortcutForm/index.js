@@ -80,6 +80,7 @@ class AddShortcutForm extends Component {
 							<GenericTextField
 								label="Title"
 								name="title"
+								delayFocus={true}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 								error={Boolean(touched.title && errors.title)}

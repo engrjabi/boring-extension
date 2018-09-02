@@ -19,8 +19,19 @@ const styles = theme => ({
 
 class GenericTextField extends Component {
 
+	componentWillMount() {
+		this.referenceField = null;
+	}
+
+	componentDidMount() {
+		const { delayFocus } = this.props;
+		if (delayFocus) {
+			setTimeout(() => this.referenceField.focus(), 265);
+		}
+	}
+
 	render() {
-		const { classes, error, errorMessage, handleChange, handleBlur, name, label, value } = this.props;
+		const { classes, error, errorMessage, handleChange, handleBlur, name, label, value, autoFocus } = this.props;
 		return (
 			<div>
 				<TextField
@@ -33,6 +44,8 @@ class GenericTextField extends Component {
 					value={value}
 					margin="normal"
 					autoComplete='off'
+					autoFocus={autoFocus}
+					inputRef={refNode => this.referenceField = refNode}
 				/>
 				{error &&
 				<FormHelperText className={classNames(classes.textField, classes.errorRemark)}>
@@ -52,6 +65,7 @@ GenericTextField.propTypes = {
 	name: PropTypes.string,
 	label: PropTypes.string,
 	value: PropTypes.string,
+	autoFocus: PropTypes.bool,
 };
 
 export default withStyles(styles)(GenericTextField);
