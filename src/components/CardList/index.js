@@ -10,13 +10,13 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { styles } from './styles';
 import { preventDefaultEvent } from '../../utils/browserCommands';
+import { formatLink } from '../../utils/formatters';
 import GenericMenu from '../GenericComponents/GenericMenu';
 
 class CardList extends Component {
 
 	handleCardRedirect = (link) => {
-		alert(link);
-		// window.location.href = 'https://www.google.com';
+		window.location = formatLink(link);
 	};
 
 	handleEdit = (card) => {
@@ -41,7 +41,7 @@ class CardList extends Component {
 				        <ButtonBase
 					        focusRipple
 					        className={classes.buttonWrapper}
-					        onClick={() => this.handleCardRedirect(tile.title)}
+					        onClick={() => this.handleCardRedirect(tile.link)}
 					        focusVisibleClassName={classes.focusVisible}>
 
 					        <div className={`${classes.avatarWrapper} ${doesImgExists ? classes.avatarWrapperHoverEffect : ''}`}>
