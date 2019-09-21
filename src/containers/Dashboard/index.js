@@ -1,67 +1,51 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- *
- * NOTE: while this component should technically be a stateless functional
- * component (SFC), hot reloading does not currently support SFCs. If hot
- * reloading is not a necessity for you then you can refactor it and remove
- * the linting exception.
- */
+import React from "react";
+import CardList from "../../components/CardList";
+import Header from "../../components/Header";
+import { GlobalStore } from "../../store/store";
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { actions } from './actions';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import { makeSelectCardList } from './selectors';
-import CardList from '../../components/CardList';
-import Header from '../../components/Header';
+const HomePage = () => {
+  const store = GlobalStore.useStore();
+  const cardList = store.get("cards");
 
-/* eslint-disable react/prefer-stateless-function */
-class HomePage extends React.PureComponent {
-  render() {
-    const { addACard, cardList, removeACard, updateClicker } = this.props;
-    return (
-      <div>
-        <Header
-	        addACard={addACard}
-        />
-        <CardList
-	        cardList={cardList}
-	        removeACard={removeACard}
-	        updateClicker={updateClicker}
-        />
-      </div>
-    );
-  }
-}
+  const addACard = React.useCallback(
+    card => store.set("cards")([card, ...cardList]),
+    [cardList]
+  );
 
-HomePage.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-  onSubmitForm: PropTypes.func,
-  username: PropTypes.string,
-  onChangeUsername: PropTypes.func,
+  const removeACard = React.useCallback(
+    cardTitle => {
+      store.set("cards")(cardList.filter(card => card.title !== cardTitle));
+    },
+    [cardList]
+  );
+
+  const updateClicker = React.useCallback(
+    cardTitle => {
+      store.set("cards")(
+        cardList.map(card => {
+          if (card.title !== cardTitle) {
+            return {
+              ...card,
+              launched: card.launched + 1
+            };
+          }
+          return card;
+        })
+      );
+    },
+    [cardList]
+  );
+
+  return (
+    <div>
+      <Header addACard={addACard} />
+      <CardList
+        cardList={cardList}
+        removeACard={removeACard}
+        updateClicker={updateClicker}
+      />
+    </div>
+  );
 };
 
-export const mapDispatchToProps = {
-  addACard: actions.addACard,
-	removeACard: actions.removeACard,
-	updateClicker: actions.updateClicker,
-};
-
-const mapStateToProps = createStructuredSelector({
-  cardList: makeSelectCardList(),
-});
-
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
-
-export default compose(
-  withConnect,
-)(HomePage);
+export default HomePage;
