@@ -2,26 +2,27 @@ import React from "react";
 import CardList from "../../components/CardList";
 import Header from "../../components/Header";
 import { GlobalStore } from "../../store/store";
+import _toNumber from "lodash/toNumber";
 
 const HomePage = () => {
   const store = GlobalStore.useStore();
   const cardList = store.get("cards");
 
   const removeACard = React.useCallback(
-    cardTitle => {
-      store.set("cards")(cardList.filter(card => card.title !== cardTitle));
+    cardId => {
+      store.set("cards")(cardList.filter(card => card.id !== cardId));
     },
     [cardList, store]
   );
 
   const updateClicker = React.useCallback(
-    cardTitle => {
+    cardId => {
       store.set("cards")(
         cardList.map(card => {
-          if (card.title !== cardTitle) {
+          if (card.id === cardId) {
             return {
               ...card,
-              launched: card.launched + 1
+              launched: _toNumber(card.launched) + 1
             };
           }
           return card;

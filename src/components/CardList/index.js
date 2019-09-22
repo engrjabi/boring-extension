@@ -18,22 +18,21 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
 
   const handleCardRedirect = React.useCallback(
     tile => {
-      const { link, title } = tile;
-      updateClicker(title);
+      const { link, id } = tile;
+      updateClicker(id);
       window.location = formatLink(link);
     },
     [updateClicker]
   );
 
   const handleEdit = card => {
-    console.log("editing", card);
     store.set("cardToEdit")(card);
     store.set("showAddOrEditCardForm")(true);
   };
 
   const handleDelete = React.useCallback(
     card => {
-      removeACard(card.title);
+      removeACard(card.id);
     },
     [removeACard]
   );

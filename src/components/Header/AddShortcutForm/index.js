@@ -78,7 +78,8 @@ class AddShortcutForm extends Component {
             handleChange,
             handleBlur,
             handleSubmit,
-            isSubmitting
+            isSubmitting,
+            submitCount
           }) => (
             <form onSubmit={handleSubmit}>
               <GenericTextField
@@ -87,7 +88,9 @@ class AddShortcutForm extends Component {
                 delayFocus={true}
                 handleChange={handleChange}
                 handleBlur={handleBlur}
-                error={Boolean(isSubmitting && touched.title && errors.title)}
+                error={Boolean(
+                  submitCount > 0 && touched.title && errors.title
+                )}
                 value={values.title}
                 errorMessage={errors.title}
               />
