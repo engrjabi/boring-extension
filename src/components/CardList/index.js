@@ -73,9 +73,21 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
                   title={tile.title}
                   style={{ textAlign: "left" }}
                   subtitle={
-                    <span>
-                      <FavoriteIcon /> {tile.launched}
-                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "0.625rem 0"
+                      }}
+                    >
+                      <FavoriteIcon
+                        style={{
+                          fontSize: "inherit",
+                          marginRight: "0.1875rem"
+                        }}
+                      />
+                      {tile.launched}
+                    </div>
                   }
                 />
               </ButtonBase>
