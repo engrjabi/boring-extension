@@ -8,8 +8,6 @@ import classNames from "classnames";
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
     width: "100%"
   },
   errorRemark: {
@@ -41,6 +39,7 @@ class GenericTextField extends Component {
       value,
       autoFocus,
       InputLabelProps,
+      InputProps,
       disabled
     } = this.props;
     return (
@@ -59,6 +58,7 @@ class GenericTextField extends Component {
           inputRef={refNode => (this.referenceField = refNode)}
           variant="outlined"
           InputLabelProps={InputLabelProps}
+          InputProps={InputProps}
           disabled={disabled}
         />
         {error && (

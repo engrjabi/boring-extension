@@ -1,4 +1,5 @@
 import { toDataURL } from "./imageManipulation";
+import { useState } from "react";
 
 export function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -6,13 +7,26 @@ export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 }
 
-export async function getRandomImage() {
+export const getRandomImage = () => {
   const imageRepoURL = "https://picsum.photos/240/180";
-  const url = `${imageRepoURL}?sig=${getRandomInt(1, 10000)}`;
-  const dataUrl = await toDataURL(url);
+  return `${imageRepoURL}?sig=${getRandomInt(1, 10000)}`;
+};
 
-  return {
-    url,
-    dataUrl
+export function useGetImageData() {
+  const [loading, setLoading] = useState(false);
+
+  const getImageData = async url => {
+    setLoading(true);
+
+    try {
+      const dataUrl = await toDataURL(url);
+      setLoading(false);
+      return dataUrl;
+    } catch (e) {
+      setLoading(false);
+      return url;
+    }
   };
+
+  return [loading, getImageData];
 }

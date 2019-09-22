@@ -1,38 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Formik } from "formik";
 import { withStyles } from "@material-ui/core/styles";
 import _isEmpty from "lodash/isEmpty";
+import _debounce from "lodash/debounce";
 import Button from "@material-ui/core/Button";
-import red from "@material-ui/core/colors/red";
 import GenericTextField from "../../GenericComponents/GenericTextField";
 import {
   arePropertiesAreEmpty,
   validateFormInput
 } from "../../../utils/checkers";
-import { getRandomImage } from "../../../utils/randomGenerator";
+import {
+  getRandomImage,
+  useGetImageData
+} from "../../../utils/randomGenerator";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Refresh from "@material-ui/icons/Refresh";
+import { DoSideEffectOnMount } from "../../../utils/lifecycle";
+import { preventDefaultEvent } from "../../../utils/browserCommands";
+import { addOrEditShortcutFormStyles } from "./style";
 
-const styles = theme => ({
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: "100%"
+const debouncedSetImageData = _debounce(
+  async (url, getImageData, formikValues, formikSetValues) => {
+    const imgData = await getImageData(url);
+    formikSetValues({
+      ...formikValues,
+      img: url,
+      imgData
+    });
   },
-  button: {
-    margin: theme.spacing.unit,
-    maxWidth: "250px",
-    width: "100%"
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit
-  },
-  submitButtonWrapper: {
-    textAlign: "center",
-    margin: "2em 0 auto"
-  },
-  errorRemark: {
-    color: red[500]
-  }
-});
+  500
+);
 
 const AddOrEditShortcutForm = ({
   classes,
@@ -40,28 +38,7 @@ const AddOrEditShortcutForm = ({
   addACard,
   closeModal
 }) => {
-  const [loadingInitialData, setLoadingInitialData] = useState(true);
-  const [initialValuesState, setInitialValuesState] = useState({
-    launched: "0",
-    title: "",
-    link: "",
-    ...initialValues
-  });
-
-  useEffect(() => {
-    (async () => {
-      setLoadingInitialData(true);
-      if (!initialValues.img) {
-        const { url, dataUrl } = await getRandomImage();
-        setInitialValuesState(prev => ({
-          ...prev,
-          img: url,
-          imgData: dataUrl
-        }));
-      }
-      setLoadingInitialData(false);
-    })();
-  }, [initialValues.img]);
+  const [getImageLoading, getImageData] = useGetImageData();
 
   const handleValidation = values => {
     let errors = {};
@@ -78,11 +55,20 @@ const AddOrEditShortcutForm = ({
     closeModal();
   };
 
+  const setRandomImage = (formikValues, formikSetValues) => {
+    const url = getRandomImage();
+    debouncedSetImageData(url, getImageData, formikValues, formikSetValues);
+  };
+
   return (
     <div>
       <Formik
-        enableReinitialize
-        initialValues={initialValuesState}
+        initialValues={{
+          launched: "0",
+          title: "",
+          link: "",
+          ...initialValues
+        }}
         validate={handleValidation}
         onSubmit={handleSubmit}
         render={({
@@ -93,11 +79,10 @@ const AddOrEditShortcutForm = ({
           handleBlur,
           handleSubmit,
           isSubmitting,
-          submitCount
+          submitCount,
+          setValues
         }) => (
           <form onSubmit={handleSubmit}>
-            {loadingInitialData && <div>Loading random image</div>}
-
             <GenericTextField
               label="Title"
               name="title"
@@ -107,22 +92,6 @@ const AddOrEditShortcutForm = ({
               error={Boolean(submitCount > 0 && touched.title && errors.title)}
               value={values.title}
               errorMessage={errors.title}
-              disabled={loadingInitialData}
-            />
-
-            <GenericTextField
-              label="Image URL"
-              name="img"
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              placeholder={"gg"}
-              error={Boolean(touched.img && errors.img)}
-              value={values.img}
-              errorMessage={errors.img}
-              disabled={loadingInitialData}
-              InputLabelProps={{
-                shrink: true
-              }}
             />
 
             <GenericTextField
@@ -133,8 +102,72 @@ const AddOrEditShortcutForm = ({
               error={Boolean(touched.link && errors.link)}
               value={values.link}
               errorMessage={errors.link}
-              disabled={loadingInitialData}
             />
+
+            <GenericTextField
+              label="Image URL"
+              name="img"
+              handleChange={e => {
+                const value = e.target.value;
+                handleChange(e);
+                debouncedSetImageData(value, getImageData, values, setValues);
+              }}
+              handleBlur={handleBlur}
+              error={Boolean(touched.img && errors.img)}
+              value={values.img}
+              errorMessage={errors.img}
+              disabled={getImageLoading}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      disabled={getImageLoading}
+                      onClick={() => setRandomImage(values, setValues)}
+                    >
+                      <Refresh />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+            <DoSideEffectOnMount
+              sideEffect={() => {
+                if (!values.img) {
+                  setRandomImage(values, setValues);
+                }
+              }}
+            />
+
+            {!_isEmpty(values.img) && values.imgData && (
+              <div
+                style={{
+                  textAlign: "center",
+                  marginTop: "0.625rem"
+                }}
+              >
+                <img
+                  src={values.imgData}
+                  style={{
+                    height: 180,
+                    width: 240
+                  }}
+                  onDragStart={preventDefaultEvent}
+                  alt="preview"
+                />
+                <div
+                  style={{
+                    fontSize: "0.75rem",
+                    fontStyle: "italic",
+                    opacity: "0.7"
+                  }}
+                >
+                  Image preview
+                </div>
+              </div>
+            )}
 
             <div className={classes.submitButtonWrapper}>
               <Button
@@ -142,9 +175,14 @@ const AddOrEditShortcutForm = ({
                 color="primary"
                 className={classes.button}
                 type="submit"
-                disabled={isSubmitting || loadingInitialData}
+                disabled={isSubmitting || getImageLoading}
               >
-                {_isEmpty(initialValues) ? "Add" : "Edit"} Shortcut
+                {getImageLoading && "Getting Image"}
+                {!getImageLoading && (
+                  <>
+                    {_isEmpty(initialValues) ? "Add Shortcut" : "Edit Shortcut"}
+                  </>
+                )}
               </Button>
             </div>
           </form>
@@ -154,4 +192,4 @@ const AddOrEditShortcutForm = ({
   );
 };
 
-export default withStyles(styles)(AddOrEditShortcutForm);
+export default withStyles(addOrEditShortcutFormStyles)(AddOrEditShortcutForm);
