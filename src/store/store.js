@@ -6,6 +6,7 @@ const cardsPersistedState = cardsPersistor.get([]);
 const initialState = {
   /**
    * @typedef {Object} CardProps
+   * @property {string} id
    * @property {string} img
    * @property {string} launched
    * @property {string} link
@@ -13,7 +14,9 @@ const initialState = {
 
    * @type {CardProps[]}
    */
-  cards: cardsPersistedState
+  cards: cardsPersistedState,
+  cardToEdit: {},
+  showAddOrEditCardForm: false
 };
 
 // Create & export a store with an initial value.

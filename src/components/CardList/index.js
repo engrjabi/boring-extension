@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -12,99 +11,97 @@ import { styles } from "./styles";
 import { preventDefaultEvent } from "../../utils/browserCommands";
 import { formatLink } from "../../utils/formatters";
 import GenericMenu from "../GenericComponents/GenericMenu";
+import { GlobalStore } from "../../store/store";
 
-class CardList extends Component {
-  handleCardRedirect = tile => {
-    const { updateClicker } = this.props;
-    const { link, title } = tile;
-    updateClicker(title);
-    window.location = formatLink(link);
-  };
+const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
+  const store = GlobalStore.useStore();
 
-  handleEdit = card => {
+  const handleCardRedirect = React.useCallback(
+    tile => {
+      const { link, title } = tile;
+      updateClicker(title);
+      window.location = formatLink(link);
+    },
+    [updateClicker]
+  );
+
+  const handleEdit = card => {
     console.log("editing", card);
+    store.set("cardToEdit")(card);
+    store.set("showAddOrEditCardForm")(true);
   };
 
-  handleDelete = card => {
-    const { removeACard } = this.props;
-    removeACard(card.title);
-  };
+  const handleDelete = React.useCallback(
+    card => {
+      removeACard(card.title);
+    },
+    [removeACard]
+  );
 
-  render() {
-    const { classes, cardList } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <GridList cellHeight={180} cols={8} className={classes.gridList}>
-          {cardList.map((tile, indexId) => {
-            const doesImgExists = tile && tile.hasOwnProperty("img");
-            return (
-              <GridListTile key={indexId} className={classes.gridListTile}>
-                <ButtonBase
-                  focusRipple
-                  className={classes.buttonWrapper}
-                  onClick={() => this.handleCardRedirect(tile)}
-                  focusVisibleClassName={classes.focusVisible}
+  return (
+    <div className={classes.root}>
+      <GridList cellHeight={180} cols={8} className={classes.gridList}>
+        {cardList.map((tile, indexId) => {
+          const doesImgExists = tile && tile.hasOwnProperty("img");
+          return (
+            <GridListTile key={indexId} className={classes.gridListTile}>
+              <ButtonBase
+                focusRipple
+                className={classes.buttonWrapper}
+                onClick={() => handleCardRedirect(tile)}
+                focusVisibleClassName={classes.focusVisible}
+              >
+                <div
+                  className={`${classes.avatarWrapper} ${
+                    doesImgExists ? classes.avatarWrapperHoverEffect : ""
+                  }`}
                 >
-                  <div
-                    className={`${classes.avatarWrapper} ${
-                      doesImgExists ? classes.avatarWrapperHoverEffect : ""
-                    }`}
-                  >
-                    <Avatar
-                      aria-label="default-icon"
-                      className={classes.avatar}
-                    >
-                      {tile.title.substring(0, 2).toUpperCase()}
-                    </Avatar>
-                  </div>
+                  <Avatar aria-label="default-icon" className={classes.avatar}>
+                    {tile.title.substring(0, 2).toUpperCase()}
+                  </Avatar>
+                </div>
 
-                  {doesImgExists && (
-                    <img
-                      src={tile.img}
-                      onDragStart={preventDefaultEvent}
-                      className={classes.image}
-                      alt={tile.title}
-                    />
-                  )}
-
-                  <GridListTileBar
-                    title={tile.title}
-                    style={{ textAlign: "left" }}
-                    subtitle={
-                      <span>
-                        <FavoriteIcon /> {tile.launched}
-                      </span>
-                    }
+                {doesImgExists && (
+                  <img
+                    src={tile.img}
+                    onDragStart={preventDefaultEvent}
+                    className={classes.image}
+                    alt={tile.title}
                   />
-                </ButtonBase>
+                )}
 
-                <GenericMenu
-                  className={classes.moreOptionsIcon}
-                  menuIcon={<MoreVertIcon />}
-                  id={`${classes.root}-${indexId}`}
-                  menuItems={[
-                    {
-                      label: "Edit",
-                      clickAction: () => this.handleEdit(tile)
-                    },
-                    {
-                      label: "Delete",
-                      clickAction: () => this.handleDelete(tile)
-                    }
-                  ]}
+                <GridListTileBar
+                  title={tile.title}
+                  style={{ textAlign: "left" }}
+                  subtitle={
+                    <span>
+                      <FavoriteIcon /> {tile.launched}
+                    </span>
+                  }
                 />
-              </GridListTile>
-            );
-          })}
-        </GridList>
-      </div>
-    );
-  }
-}
+              </ButtonBase>
 
-CardList.propTypes = {
-  classes: PropTypes.object.isRequired
+              <GenericMenu
+                className={classes.moreOptionsIcon}
+                menuIcon={<MoreVertIcon />}
+                id={`${classes.root}-${indexId}`}
+                menuItems={[
+                  {
+                    label: "Edit",
+                    clickAction: () => handleEdit(tile)
+                  },
+                  {
+                    label: "Delete",
+                    clickAction: () => handleDelete(tile)
+                  }
+                ]}
+              />
+            </GridListTile>
+          );
+        })}
+      </GridList>
+    </div>
+  );
 };
 
 export default withStyles(styles)(CardList);

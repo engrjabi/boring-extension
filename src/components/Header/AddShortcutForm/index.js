@@ -1,133 +1,139 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Formik } from 'formik';
-import { withStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
-import red from '@material-ui/core/colors/red';
-import GenericTextField from '../../GenericComponents/GenericTextField';
-import { arePropertiesAreEmpty, validateFormInput } from '../../../utils/checkers';
-import { getRandomImage } from '../../../utils/randomGenerator';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Formik } from "formik";
+import { withStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import Button from "@material-ui/core/Button";
+import red from "@material-ui/core/colors/red";
+import GenericTextField from "../../GenericComponents/GenericTextField";
+import {
+  arePropertiesAreEmpty,
+  validateFormInput
+} from "../../../utils/checkers";
+import { getRandomImage } from "../../../utils/randomGenerator";
 
 const styles = theme => ({
-	textField: {
-		marginLeft: theme.spacing.unit,
-		marginRight: theme.spacing.unit,
-		width: '100%',
-	},
-	button: {
-		margin: theme.spacing.unit,
-		maxWidth: '250px',
-		width: '100%',
-	},
-	leftIcon: {
-		marginRight: theme.spacing.unit,
-	},
-	submitButtonWrapper: {
-		textAlign: 'center',
-		margin: '2em 0 auto',
-	},
-	errorRemark: {
-		color: red[500],
-	}
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: "100%"
+  },
+  button: {
+    margin: theme.spacing.unit,
+    maxWidth: "250px",
+    width: "100%"
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit
+  },
+  submitButtonWrapper: {
+    textAlign: "center",
+    margin: "2em 0 auto"
+  },
+  errorRemark: {
+    color: red[500]
+  }
 });
 
 class AddShortcutForm extends Component {
+  generateInitialFormValues = () => {
+    const { initialValues } = this.props;
+    return {
+      launched: "0",
+      title: "",
+      link: "",
+      img: getRandomImage(),
+      ...initialValues
+    };
+  };
 
-	static defaultProps = {};
+  handleValidation = values => {
+    let errors = {};
 
-	generateInitialFormValues = () => {
-		return {
-			title: '',
-			imgURL: '',
-			link: '',
-		}
-	};
+    errors.title = validateFormInput(values.title, ["required"]);
+    errors.img = validateFormInput(values.img, ["required"]);
+    errors.link = validateFormInput(values.link, ["required"]);
 
-	handleValidation = (values) => {
-		let errors = {};
+    return arePropertiesAreEmpty(errors) ? {} : errors;
+  };
 
-		errors.title = validateFormInput(values.title, ['required']);
-		errors.imgURL = validateFormInput(values.imgURL, ['required']);
-		errors.link = validateFormInput(values.link, ['required']);
+  handleSubmit = values => {
+    const { addACard, closeModal } = this.props;
+    addACard(values);
+    closeModal();
+  };
 
-		return arePropertiesAreEmpty(errors) ? {} : errors;
-	};
+  render() {
+    const { classes } = this.props;
+    return (
+      <div>
+        <Formik
+          initialValues={this.generateInitialFormValues()}
+          validate={this.handleValidation}
+          onSubmit={this.handleSubmit}
+          render={({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <GenericTextField
+                label="Title"
+                name="title"
+                delayFocus={true}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                error={Boolean(isSubmitting && touched.title && errors.title)}
+                value={values.title}
+                errorMessage={errors.title}
+              />
 
-	handleSubmit = (values, methods) => {
-		const { addACard, closeModal } = this.props;
-		const { title, imgURL, link } = values;
-		addACard({ title: title, launched: '0', img: getRandomImage(), link, });
-		closeModal();
-	};
+              <GenericTextField
+                label="Image URL"
+                name="img"
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                error={Boolean(touched.img && errors.img)}
+                value={values.img}
+                errorMessage={errors.img}
+              />
 
-	render() {
-		const { classes } = this.props;
-		return (
-			<div>
-				<Formik
-					initialValues={this.generateInitialFormValues()}
-					validate={this.handleValidation}
-					onSubmit={this.handleSubmit}
-					render={({
-						         values,
-						         errors,
-						         touched,
-						         handleChange,
-						         handleBlur,
-						         handleSubmit,
-						         isSubmitting,
-					         }) => (
-						<form onSubmit={handleSubmit}>
-							<GenericTextField
-								label="Title"
-								name="title"
-								delayFocus={true}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-								error={Boolean(isSubmitting && touched.title && errors.title)}
-								value={values.title}
-								errorMessage={errors.title}
-							/>
+              <GenericTextField
+                label="Link"
+                name="link"
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                error={Boolean(touched.link && errors.link)}
+                value={values.link}
+                errorMessage={errors.link}
+              />
 
-							<GenericTextField
-								label="Image URL"
-								name="imgURL"
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-								error={Boolean(touched.imgURL && errors.imgURL)}
-								value={values.imgURL}
-								errorMessage={errors.imgURL}
-							/>
-
-							<GenericTextField
-								label="Link"
-								name="link"
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-								error={Boolean(touched.link && errors.link)}
-								value={values.link}
-								errorMessage={errors.link}
-							/>
-
-							<div className={classes.submitButtonWrapper}>
-								<Button variant="contained" color="primary"
-								        className={classes.button} type="submit"
-								        disabled={isSubmitting}>
-									<AddIcon className={classes.leftIcon}/>
-									Add
-								</Button>
-							</div>
-						</form>
-					)}
-				/>
-			</div>
-		)
-	}
+              <div className={classes.submitButtonWrapper}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  <AddIcon className={classes.leftIcon} />
+                  Add
+                </Button>
+              </div>
+            </form>
+          )}
+        />
+      </div>
+    );
+  }
 }
 
 AddShortcutForm.propTypes = {
-	classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AddShortcutForm);

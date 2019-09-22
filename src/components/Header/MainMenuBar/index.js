@@ -1,81 +1,81 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import GenericMenu from '../../GenericComponents/GenericMenu/index';
-import GenericModal from '../../GenericComponents/GenericModal/index';
-import AddShortcutForm from '../AddShortcutForm';
+import React, { Component, useState } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import GenericMenu from "../../GenericComponents/GenericMenu/index";
+import GenericModal from "../../GenericComponents/GenericModal/index";
+import AddOrEditShortcutForm from "../AddShortcutForm";
+import { GlobalStore } from "../../../store/store";
+import _isEmpty from "lodash/isEmpty";
+import shortid from "shortid";
 
 const styles = () => ({
-	root: {},
+  root: {}
 });
 
-class MainMenuBar extends Component {
+const MainMenuBar = ({ classes }) => {
+  const store = GlobalStore.useStore();
+  const cardList = store.get("cards");
+  const openModal = store.get("showAddOrEditCardForm");
+  const cardToEdit = store.get("cardToEdit");
 
-	static defaultProps = {};
+  const addACard = React.useCallback(
+    card =>
+      store.set("cards")([
+        {
+          ...card,
+          id: shortid.generate()
+        },
+        ...cardList
+      ]),
+    [cardList, store]
+  );
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			openModal: false,
-		}
-	}
+  const editACard = React.useCallback(
+    editedCard => {
+      store.set("cards")(
+        cardList.map(card => {
+          if (card.id === editedCard.id) {
+            return editedCard;
+          }
+          return card;
+        })
+      );
+      store.set("cardToEdit")({});
+    },
+    [cardList, store]
+  );
 
-	handleAddCard = () => {
-		this.setState({ openModal: true });
-	};
+  const handleCloseModal = () => store.set("showAddOrEditCardForm")(false);
 
-	handleCloseModal = () => {
-		this.setState({ openModal: false });
-	};
+  return (
+    <div>
+      <GenericMenu
+        className={classes.root}
+        id={`${classes.root}-id`}
+        menuItems={[
+          {
+            label: "Add Shortcut",
+            clickAction: () => store.set("showAddOrEditCardForm")(true)
+          },
+          {
+            label: "Export Settings",
+            clickAction: () => console.log("exporting settings")
+          },
+          {
+            label: "Import Settings",
+            clickAction: () => console.log("importing settings")
+          }
+        ]}
+      />
 
-	handleExportSettings = () => {
-		console.log('exporting settings');
-	};
-
-	handleImportSettings = () => {
-		console.log('importing settings');
-	};
-
-	render() {
-		const { classes, addACard } = this.props;
-		const { openModal } = this.state;
-
-		return (
-			<div>
-				<GenericMenu
-					className={classes.root}
-					id={`${classes.root}-id`}
-					menuItems={[
-						{
-							label: 'Add Shortcut',
-							clickAction: this.handleAddCard,
-						},
-						{
-							label: 'Export Settings',
-							clickAction: this.handleExportSettings,
-						},
-						{
-							label: 'Import Settings',
-							clickAction: this.handleImportSettings,
-						},
-					]}
-				/>
-
-				<GenericModal
-					openStatus={openModal}
-					handleClose={this.handleCloseModal}>
-					<AddShortcutForm
-						addACard={addACard}
-						closeModal={this.handleCloseModal}
-					/>
-				</GenericModal>
-			</div>
-		);
-	}
-}
-
-MainMenuBar.propTypes = {
-	classes: PropTypes.object.isRequired,
+      <GenericModal openStatus={openModal} handleClose={handleCloseModal}>
+        <AddOrEditShortcutForm
+          initialValues={cardToEdit}
+          addACard={_isEmpty(cardToEdit) ? addACard : editACard}
+          closeModal={handleCloseModal}
+        />
+      </GenericModal>
+    </div>
+  );
 };
 
 export default withStyles(styles)(MainMenuBar);

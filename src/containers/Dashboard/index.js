@@ -7,16 +7,11 @@ const HomePage = () => {
   const store = GlobalStore.useStore();
   const cardList = store.get("cards");
 
-  const addACard = React.useCallback(
-    card => store.set("cards")([card, ...cardList]),
-    [cardList]
-  );
-
   const removeACard = React.useCallback(
     cardTitle => {
       store.set("cards")(cardList.filter(card => card.title !== cardTitle));
     },
-    [cardList]
+    [cardList, store]
   );
 
   const updateClicker = React.useCallback(
@@ -33,12 +28,12 @@ const HomePage = () => {
         })
       );
     },
-    [cardList]
+    [cardList, store]
   );
 
   return (
     <div>
-      <Header addACard={addACard} />
+      <Header />
       <CardList
         cardList={cardList}
         removeACard={removeACard}
