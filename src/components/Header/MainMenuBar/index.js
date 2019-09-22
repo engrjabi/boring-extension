@@ -26,7 +26,8 @@ const MainMenuBar = ({ classes }) => {
         },
         ...cardList
       ]),
-    [cardList, store]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cardList]
   );
 
   const editACard = React.useCallback(
@@ -41,7 +42,8 @@ const MainMenuBar = ({ classes }) => {
       );
       store.set("cardToEdit")({});
     },
-    [cardList, store]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cardList]
   );
 
   const handleCloseModal = () => {

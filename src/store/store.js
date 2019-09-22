@@ -32,7 +32,8 @@ export const GlobalStorePersistor = ({ children }) => {
       const cardsPersistedState = await cardsPersistor.get([]);
       store.set("cards")(cardsPersistedState);
     })();
-  }, [store]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return children;
 };

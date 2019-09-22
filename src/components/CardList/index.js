@@ -41,7 +41,7 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
     <div className={classes.root}>
       <GridList cellHeight={180} cols={8} className={classes.gridList}>
         {cardList.map((tile, indexId) => {
-          const doesImgExists = tile && tile.hasOwnProperty("img");
+          const doesImgExists = tile && tile.hasOwnProperty("imgData");
           return (
             <GridListTile key={indexId} className={classes.gridListTile}>
               <ButtonBase
@@ -62,7 +62,7 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
 
                 {doesImgExists && (
                   <img
-                    src={tile.img}
+                    src={tile.imgData}
                     onDragStart={preventDefaultEvent}
                     className={classes.image}
                     alt={tile.title}

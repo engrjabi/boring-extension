@@ -39,7 +39,9 @@ class GenericTextField extends Component {
       name,
       label,
       value,
-      autoFocus
+      autoFocus,
+      InputLabelProps,
+      disabled
     } = this.props;
     return (
       <div>
@@ -56,6 +58,8 @@ class GenericTextField extends Component {
           autoFocus={autoFocus}
           inputRef={refNode => (this.referenceField = refNode)}
           variant="outlined"
+          InputLabelProps={InputLabelProps}
+          disabled={disabled}
         />
         {error && (
           <FormHelperText

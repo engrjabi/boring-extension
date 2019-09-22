@@ -12,7 +12,8 @@ const HomePage = () => {
     cardId => {
       store.set("cards")(cardList.filter(card => card.id !== cardId));
     },
-    [cardList, store]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cardList]
   );
 
   const updateClicker = React.useCallback(
@@ -29,7 +30,8 @@ const HomePage = () => {
         })
       );
     },
-    [cardList, store]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cardList]
   );
 
   return (

@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { withStyles } from "@material-ui/core/styles";
 import _isEmpty from "lodash/isEmpty";
@@ -35,19 +34,36 @@ const styles = theme => ({
   }
 });
 
-class AddShortcutForm extends Component {
-  generateInitialFormValues = () => {
-    const { initialValues } = this.props;
-    return {
-      launched: "0",
-      title: "",
-      link: "",
-      img: getRandomImage(),
-      ...initialValues
-    };
-  };
+const AddOrEditShortcutForm = ({
+  classes,
+  initialValues,
+  addACard,
+  closeModal
+}) => {
+  const [loadingInitialData, setLoadingInitialData] = useState(true);
+  const [initialValuesState, setInitialValuesState] = useState({
+    launched: "0",
+    title: "",
+    link: "",
+    ...initialValues
+  });
 
-  handleValidation = values => {
+  useEffect(() => {
+    (async () => {
+      setLoadingInitialData(true);
+      if (!initialValues.img) {
+        const { url, dataUrl } = await getRandomImage();
+        setInitialValuesState(prev => ({
+          ...prev,
+          img: url,
+          imgData: dataUrl
+        }));
+      }
+      setLoadingInitialData(false);
+    })();
+  }, [initialValues.img]);
+
+  const handleValidation = values => {
     let errors = {};
 
     errors.title = validateFormInput(values.title, ["required"]);
@@ -57,86 +73,85 @@ class AddShortcutForm extends Component {
     return arePropertiesAreEmpty(errors) ? {} : errors;
   };
 
-  handleSubmit = values => {
-    const { addACard, closeModal } = this.props;
+  const handleSubmit = values => {
     addACard(values);
     closeModal();
   };
 
-  render() {
-    const { classes, initialValues } = this.props;
+  return (
+    <div>
+      <Formik
+        enableReinitialize
+        initialValues={initialValuesState}
+        validate={handleValidation}
+        onSubmit={handleSubmit}
+        render={({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          submitCount
+        }) => (
+          <form onSubmit={handleSubmit}>
+            {loadingInitialData && <div>Loading random image</div>}
 
-    return (
-      <div>
-        <Formik
-          initialValues={this.generateInitialFormValues()}
-          validate={this.handleValidation}
-          onSubmit={this.handleSubmit}
-          render={({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            submitCount
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <GenericTextField
-                label="Title"
-                name="title"
-                delayFocus={true}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                error={Boolean(
-                  submitCount > 0 && touched.title && errors.title
-                )}
-                value={values.title}
-                errorMessage={errors.title}
-              />
+            <GenericTextField
+              label="Title"
+              name="title"
+              delayFocus={true}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              error={Boolean(submitCount > 0 && touched.title && errors.title)}
+              value={values.title}
+              errorMessage={errors.title}
+              disabled={loadingInitialData}
+            />
 
-              <GenericTextField
-                label="Image URL"
-                name="img"
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                error={Boolean(touched.img && errors.img)}
-                value={values.img}
-                errorMessage={errors.img}
-              />
+            <GenericTextField
+              label="Image URL"
+              name="img"
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              placeholder={"gg"}
+              error={Boolean(touched.img && errors.img)}
+              value={values.img}
+              errorMessage={errors.img}
+              disabled={loadingInitialData}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
 
-              <GenericTextField
-                label="Link"
-                name="link"
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                error={Boolean(touched.link && errors.link)}
-                value={values.link}
-                errorMessage={errors.link}
-              />
+            <GenericTextField
+              label="Link"
+              name="link"
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              error={Boolean(touched.link && errors.link)}
+              value={values.link}
+              errorMessage={errors.link}
+              disabled={loadingInitialData}
+            />
 
-              <div className={classes.submitButtonWrapper}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {_isEmpty(initialValues) ? "Add" : "Edit"} Shortcut
-                </Button>
-              </div>
-            </form>
-          )}
-        />
-      </div>
-    );
-  }
-}
-
-AddShortcutForm.propTypes = {
-  classes: PropTypes.object.isRequired
+            <div className={classes.submitButtonWrapper}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                type="submit"
+                disabled={isSubmitting || loadingInitialData}
+              >
+                {_isEmpty(initialValues) ? "Add" : "Edit"} Shortcut
+              </Button>
+            </div>
+          </form>
+        )}
+      />
+    </div>
+  );
 };
 
-export default withStyles(styles)(AddShortcutForm);
+export default withStyles(styles)(AddOrEditShortcutForm);
