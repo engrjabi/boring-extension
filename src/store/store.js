@@ -1,7 +1,6 @@
 import { createConnectedStore } from "undux";
 import { globalStoreEffects, cardsPersistor } from "./effects";
-
-const cardsPersistedState = cardsPersistor.get([]);
+import { useEffect } from "react";
 
 const initialState = {
   /**
@@ -14,7 +13,7 @@ const initialState = {
 
    * @type {CardProps[]}
    */
-  cards: cardsPersistedState,
+  cards: [],
   cardToEdit: {},
   showAddOrEditCardForm: false
 };
@@ -24,3 +23,16 @@ export const GlobalStore = createConnectedStore(
   initialState,
   globalStoreEffects
 );
+
+export const GlobalStorePersistor = ({ children }) => {
+  const store = GlobalStore.useStore();
+
+  useEffect(() => {
+    (async () => {
+      const cardsPersistedState = await cardsPersistor.get([]);
+      store.set("cards")(cardsPersistedState);
+    })();
+  }, [store]);
+
+  return children;
+};
