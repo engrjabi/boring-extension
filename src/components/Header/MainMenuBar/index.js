@@ -44,7 +44,10 @@ const MainMenuBar = ({ classes }) => {
     [cardList, store]
   );
 
-  const handleCloseModal = () => store.set("showAddOrEditCardForm")(false);
+  const handleCloseModal = () => {
+    store.set("showAddOrEditCardForm")(false);
+    store.set("cardToEdit")({});
+  };
 
   return (
     <div>
