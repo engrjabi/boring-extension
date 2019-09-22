@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import { withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
+import _isEmpty from "lodash/isEmpty";
 import Button from "@material-ui/core/Button";
 import red from "@material-ui/core/colors/red";
 import GenericTextField from "../../GenericComponents/GenericTextField";
@@ -64,7 +64,8 @@ class AddShortcutForm extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, initialValues } = this.props;
+
     return (
       <div>
         <Formik
@@ -123,8 +124,7 @@ class AddShortcutForm extends Component {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  <AddIcon className={classes.leftIcon} />
-                  Add
+                  {_isEmpty(initialValues) ? "Add" : "Edit"} Shortcut
                 </Button>
               </div>
             </form>
