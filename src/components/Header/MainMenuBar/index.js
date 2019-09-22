@@ -60,15 +60,15 @@ const MainMenuBar = ({ classes }) => {
           {
             label: "Add Shortcut",
             clickAction: () => store.set("showAddOrEditCardForm")(true)
-          },
-          {
-            label: "Export Settings",
-            clickAction: () => console.log("exporting settings")
-          },
-          {
-            label: "Import Settings",
-            clickAction: () => console.log("importing settings")
           }
+          // {
+          //   label: "Export Settings",
+          //   clickAction: () => console.log("exporting settings")
+          // },
+          // {
+          //   label: "Import Settings",
+          //   clickAction: () => console.log("importing settings")
+          // }
         ]}
       />
 
