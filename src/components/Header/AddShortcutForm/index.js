@@ -151,8 +151,7 @@ const AddOrEditShortcutForm = ({
                 <img
                   src={values.imgData}
                   style={{
-                    height: 180,
-                    width: 240
+                    maxHeight: 100
                   }}
                   onDragStart={preventDefaultEvent}
                   alt="preview"

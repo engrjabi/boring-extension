@@ -10,6 +10,7 @@
     "localforage": "1.7.3",
     "lodash": "4.17.15",
     "moment": "2.24.0",
+    "muuri": "^0.8.0",
     "prettier": "1.18.2",
     "prop-types": "15.6.2",
     "react": "16.9.0",

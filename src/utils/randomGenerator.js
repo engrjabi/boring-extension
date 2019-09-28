@@ -8,8 +8,8 @@ export function getRandomInt(min, max) {
 }
 
 export const getRandomImage = () => {
-  const imageRepoURL = "https://picsum.photos/240/180";
-  return `${imageRepoURL}?sig=${getRandomInt(1, 10000)}`;
+  const imageRepoURL = "https://robohash.org";
+  return `${imageRepoURL}/${getRandomInt(1, 10000)}`;
 };
 
 export function useGetImageData() {

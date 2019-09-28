@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import Avatar from "@material-ui/core/Avatar";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -12,8 +9,16 @@ import { preventDefaultEvent } from "../../utils/browserCommands";
 import { formatLink } from "../../utils/formatters";
 import GenericMenu from "../GenericComponents/GenericMenu";
 import { GlobalStore } from "../../store/store";
+import Muuri from "muuri";
+import _isEmpty from "lodash/isEmpty";
+import _find from "lodash/find";
+import { useWindowSize } from "../../utils/lifecycle";
+import "./styles.css";
 
 const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
+  const [width] = useWindowSize();
+  const [draggableContainer, setDraggableContainer] = useState(null);
+  const [cardMouseDownTimeStamp, setCardMouseDownTimeStamp] = useState(null);
   const store = GlobalStore.useStore();
 
   const handleCardRedirect = React.useCallback(
@@ -37,27 +42,105 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
     [removeACard]
   );
 
+  useLayoutEffect(() => {
+    /**
+     * Reset muuriInstance whenever cardList changes since muuriInstance
+     * alone cannot track if new elements are added or removed
+     */
+    if (_isEmpty(cardList)) {
+      return;
+    }
+
+    if (draggableContainer) {
+      draggableContainer.destroy();
+    }
+
+    const muuriInstance = new Muuri(".grid", {
+      dragEnabled: true,
+      dragStartPredicate: {
+        distance: 10,
+        delay: 100
+      }
+    });
+
+    setDraggableContainer(muuriInstance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardList]);
+
+  useLayoutEffect(() => {
+    if (draggableContainer) {
+      draggableContainer.layout(true);
+    }
+  }, [draggableContainer, width]);
+
   return (
-    <div className={classes.root}>
-      <GridList cellHeight={180} cols={8} className={classes.gridList}>
-        {cardList.map((tile, indexId) => {
-          const doesImgExists = tile && tile.hasOwnProperty("imgData");
-          return (
-            <GridListTile key={indexId} className={classes.gridListTile}>
+    <div className="grid">
+      {cardList.map((tile, indexId) => {
+        const doesImgExists = tile && tile.hasOwnProperty("imgData");
+        // Deduct the margins and borders on both sides
+        const tileSquareDimension = Math.floor(width / 10 - 6) * 0.99;
+
+        return (
+          <div className="item" key={indexId}>
+            <div className="item-content" data-id={tile.id}>
               <ButtonBase
                 disableRipple
                 className={classes.buttonWrapper}
-                onClick={() => handleCardRedirect(tile)}
-                focusVisibleClassName={classes.focusVisible}
+                onMouseDown={e => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setCardMouseDownTimeStamp(e.timeStamp);
+                }}
+                onMouseUp={e => {
+                  /**
+                   * If interval between onMouseDown and onMouseUp is only short then user
+                   * initiates a click event and not drag event
+                   */
+                  e.stopPropagation();
+                  e.preventDefault();
+                  if (
+                    cardMouseDownTimeStamp &&
+                    e.timeStamp - cardMouseDownTimeStamp < 300
+                  ) {
+                    return handleCardRedirect(tile);
+                  }
+
+                  /**
+                   * We need to read data from draggableContainer then save the same order
+                   * seen on the view on the local db. We need to add a delay on saving on DB
+                   * to make the animation transition smooth
+                   */
+                  if (draggableContainer) {
+                    const sortedCardList = draggableContainer
+                      .getItems()
+                      .map(item => {
+                        const itemId = item._child.getAttribute("data-id");
+                        return _find(cardList, { id: itemId });
+                      });
+                    setTimeout(() => store.set("cards")(sortedCardList), 300);
+                  }
+                }}
+                style={{
+                  width: tileSquareDimension,
+                  height: tileSquareDimension
+                }}
               >
-                <div
-                  className={`${classes.avatarWrapper} ${
-                    doesImgExists ? classes.avatarWrapperHoverEffect : ""
-                  }`}
-                >
-                  <Avatar aria-label="default-icon" className={classes.avatar}>
-                    {tile.title.substring(0, 2).toUpperCase()}
-                  </Avatar>
+                <GridListTileBar
+                  titlePosition="top"
+                  title={tile.title}
+                  className={classes.gridListTileBar}
+                  classes={{
+                    title: classes.gridListTileTitle
+                  }}
+                />
+
+                <div className={classes.launchedContainer}>
+                  <FavoriteIcon
+                    style={{
+                      fontSize: "inherit"
+                    }}
+                  />
+                  {tile.launched}
                 </div>
 
                 {doesImgExists && (
@@ -68,28 +151,6 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
                     alt={tile.title}
                   />
                 )}
-
-                <GridListTileBar
-                  title={tile.title}
-                  style={{ textAlign: "left" }}
-                  subtitle={
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "0.625rem 0"
-                      }}
-                    >
-                      <FavoriteIcon
-                        style={{
-                          fontSize: "inherit",
-                          marginRight: "0.1875rem"
-                        }}
-                      />
-                      {tile.launched}
-                    </div>
-                  }
-                />
               </ButtonBase>
 
               <GenericMenu
@@ -107,10 +168,10 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
                   }
                 ]}
               />
-            </GridListTile>
-          );
-        })}
-      </GridList>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
