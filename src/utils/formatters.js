@@ -15,6 +15,6 @@ export const formatLink = link => {
   if (isHttpProtocolFound) {
     return link;
   } else {
-    return `https://${link}`;
+    return `http://${link}`;
   }
 };
