@@ -45,7 +45,7 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
           return (
             <GridListTile key={indexId} className={classes.gridListTile}>
               <ButtonBase
-                focusRipple
+                disableRipple
                 className={classes.buttonWrapper}
                 onClick={() => handleCardRedirect(tile)}
                 focusVisibleClassName={classes.focusVisible}
