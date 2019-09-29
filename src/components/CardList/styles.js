@@ -32,9 +32,9 @@ export const styles = theme => ({
     justifyContent: "center",
     color: "white",
     position: "absolute",
-    bottom: "0.1rem",
-    left: "0.1rem",
-    borderRadius: "50%",
+    bottom: "0",
+    left: "0",
+    borderRadius: "0 15px 0 9px",
     height: 40,
     width: 40,
     background: "black"
