@@ -16,7 +16,7 @@ const styles = theme => ({
     textAlign: "left"
   },
   typography: {
-    margin: theme.spacing.unit * 2,
+    margin: "1rem",
     letterSpacing: "2px"
   }
 });
@@ -54,7 +54,6 @@ class MainDateDisplay extends Component {
     return (
       <div className={classes.root}>
         <Typography
-          variant="title"
           color="inherit"
           className={`${classes.flex} ${classes.interaction}`}
         >

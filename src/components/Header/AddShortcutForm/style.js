@@ -5,12 +5,12 @@ export const addOrEditShortcutFormStyles = theme => ({
     width: "100%"
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: '0.5rem',
     maxWidth: "250px",
     width: "100%"
   },
   leftIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: '0.5rem'
   },
   submitButtonWrapper: {
     textAlign: "center",

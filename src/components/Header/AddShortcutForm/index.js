@@ -67,6 +67,8 @@ const AddOrEditShortcutForm = ({
           launched: "0",
           title: "",
           link: "",
+          img: "",
+          imgData: null,
           ...initialValues
         }}
         validate={handleValidation}
