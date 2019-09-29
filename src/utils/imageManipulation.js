@@ -5,8 +5,10 @@ import _first from "lodash/first";
 import _get from "lodash/get";
 import { extractHostname } from "./extractor";
 
+const corsAnywhereProxy = "https://cors-anywhere.herokuapp.com";
+
 export const toDataURL = url =>
-  fetch(url)
+  fetch(`${corsAnywhereProxy}/${url}`)
     .then(response => response.blob())
     .then(
       blob =>
@@ -19,7 +21,7 @@ export const toDataURL = url =>
     );
 
 export const getFavico = url =>
-  fetch(`https://cors-anywhere.herokuapp.com/${url}`)
+  fetch(`${corsAnywhereProxy}/${url}`)
     .then(response => response.blob())
     .then(
       blob =>

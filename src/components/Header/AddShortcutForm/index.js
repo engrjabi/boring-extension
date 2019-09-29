@@ -12,6 +12,7 @@ import { getRandomImage } from "../../../utils/randomGenerator";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Refresh from "@material-ui/icons/Refresh";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import { DoSideEffectOnMount } from "../../../utils/lifecycle";
 import { preventDefaultEvent } from "../../../utils/browserCommands";
 import { addOrEditShortcutFormStyles } from "./style";
@@ -108,7 +109,7 @@ const AddOrEditShortcutForm = ({
                         }
                       }}
                     >
-                      <Refresh />
+                      <CloudDownloadIcon />
                     </IconButton>
                   </InputAdornment>
                 )
