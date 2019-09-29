@@ -1,6 +1,3 @@
-import { toDataURL } from "./imageManipulation";
-import { useState } from "react";
-
 export function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -9,24 +6,5 @@ export function getRandomInt(min, max) {
 
 export const getRandomImage = () => {
   const imageRepoURL = "https://robohash.org";
-  return `${imageRepoURL}/${getRandomInt(1, 10000)}`;
+  return `${imageRepoURL}/${getRandomInt(1, 100000)}`;
 };
-
-export function useGetImageData() {
-  const [loading, setLoading] = useState(false);
-
-  const getImageData = async url => {
-    setLoading(true);
-
-    try {
-      const dataUrl = await toDataURL(url);
-      setLoading(false);
-      return dataUrl;
-    } catch (e) {
-      setLoading(false);
-      return url;
-    }
-  };
-
-  return [loading, getImageData];
-}

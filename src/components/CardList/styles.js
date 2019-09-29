@@ -22,8 +22,9 @@ export const styles = theme => ({
     width: "100%"
   },
   image: {
-    width: "100%",
-    height: "100%"
+    maxWidth: "100%",
+    maxHeight: "100%",
+    borderRadius: 10
   },
   launchedContainer: {
     display: "flex",

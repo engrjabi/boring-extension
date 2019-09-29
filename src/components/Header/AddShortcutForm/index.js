@@ -2,35 +2,24 @@ import React from "react";
 import { Formik } from "formik";
 import { withStyles } from "@material-ui/core/styles";
 import _isEmpty from "lodash/isEmpty";
-import _debounce from "lodash/debounce";
 import Button from "@material-ui/core/Button";
 import GenericTextField from "../../GenericComponents/GenericTextField";
 import {
   arePropertiesAreEmpty,
   validateFormInput
 } from "../../../utils/checkers";
-import {
-  getRandomImage,
-  useGetImageData
-} from "../../../utils/randomGenerator";
+import { getRandomImage } from "../../../utils/randomGenerator";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Refresh from "@material-ui/icons/Refresh";
 import { DoSideEffectOnMount } from "../../../utils/lifecycle";
 import { preventDefaultEvent } from "../../../utils/browserCommands";
 import { addOrEditShortcutFormStyles } from "./style";
-
-const debouncedSetImageData = _debounce(
-  async (url, getImageData, formikValues, formikSetValues) => {
-    const imgData = await getImageData(url);
-    formikSetValues({
-      ...formikValues,
-      img: url,
-      imgData
-    });
-  },
-  500
-);
+import {
+  debouncedSetImageData,
+  useGetFavico,
+  useGetImageData
+} from "../../../utils/imageManipulation";
 
 const AddOrEditShortcutForm = ({
   classes,
@@ -39,6 +28,8 @@ const AddOrEditShortcutForm = ({
   closeModal
 }) => {
   const [getImageLoading, getImageData] = useGetImageData();
+  const [getFavicoLoading, getFavico] = useGetFavico();
+  const gettingImageLoading = getImageLoading || getFavicoLoading;
 
   const handleValidation = values => {
     let errors = {};
@@ -55,9 +46,9 @@ const AddOrEditShortcutForm = ({
     closeModal();
   };
 
-  const setRandomImage = (formikValues, formikSetValues) => {
-    const url = getRandomImage();
-    debouncedSetImageData(url, getImageData, formikValues, formikSetValues);
+  const setImageDataInFormik = (formikSetFieldValue, urlToUse) => {
+    const url = urlToUse || getRandomImage();
+    debouncedSetImageData(url, getImageData, formikSetFieldValue);
   };
 
   return (
@@ -82,7 +73,7 @@ const AddOrEditShortcutForm = ({
           handleSubmit,
           isSubmitting,
           submitCount,
-          setValues
+          setFieldValue
         }) => (
           <form onSubmit={handleSubmit}>
             <GenericTextField
@@ -104,27 +95,45 @@ const AddOrEditShortcutForm = ({
               error={Boolean(touched.link && errors.link)}
               value={values.link}
               errorMessage={errors.link}
+              disabled={gettingImageLoading}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      disabled={gettingImageLoading}
+                      onClick={async () => {
+                        const parsedFavico = await getFavico(values.link);
+                        if (parsedFavico) {
+                          setImageDataInFormik(setFieldValue, parsedFavico);
+                        }
+                      }}
+                    >
+                      <Refresh />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
 
             <GenericTextField
               label="Image URL"
               name="img"
               handleChange={e => {
-                const value = e.target.value;
+                const imageUrl = e.target.value;
                 handleChange(e);
-                debouncedSetImageData(value, getImageData, values, setValues);
+                setImageDataInFormik(setFieldValue, imageUrl);
               }}
               handleBlur={handleBlur}
               error={Boolean(touched.img && errors.img)}
               value={values.img}
               errorMessage={errors.img}
-              disabled={getImageLoading}
+              disabled={gettingImageLoading}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      disabled={getImageLoading}
-                      onClick={() => setRandomImage(values, setValues)}
+                      disabled={gettingImageLoading}
+                      onClick={() => setImageDataInFormik(setFieldValue)}
                     >
                       <Refresh />
                     </IconButton>
@@ -138,7 +147,7 @@ const AddOrEditShortcutForm = ({
             <DoSideEffectOnMount
               sideEffect={() => {
                 if (!values.img) {
-                  setRandomImage(values, setValues);
+                  setImageDataInFormik(setFieldValue);
                 }
               }}
             />
@@ -176,10 +185,10 @@ const AddOrEditShortcutForm = ({
                 color="primary"
                 className={classes.button}
                 type="submit"
-                disabled={isSubmitting || getImageLoading}
+                disabled={isSubmitting || gettingImageLoading}
               >
-                {getImageLoading && "Getting Image"}
-                {!getImageLoading && (
+                {gettingImageLoading && "Getting Image"}
+                {!gettingImageLoading && (
                   <>
                     {_isEmpty(initialValues) ? "Add Shortcut" : "Edit Shortcut"}
                   </>
