@@ -1,7 +1,5 @@
-const httpRegex = RegExp("://", "g");
-
-export const formatLink = link => {
-  const isHttpProtocolFound = httpRegex.test(link);
+export const formatLink = (link = "") => {
+  const isHttpProtocolFound = link.includes("://");
 
   if (isHttpProtocolFound) {
     return link;

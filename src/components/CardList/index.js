@@ -25,7 +25,8 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
     tile => {
       const { link, id } = tile;
       updateClicker(id);
-      window.location = formatLink(link);
+      window.open(formatLink(link), "_blank");
+      window.close();
     },
     [updateClicker]
   );
