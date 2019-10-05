@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Popover from "@material-ui/core/Popover";
-import Moment from "react-moment";
 import { copyToClipboard } from "../../../utils/browserCommands";
+import formatDate from "date-fns/format";
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flexGrow: 1
   },
@@ -56,12 +56,9 @@ class MainDateDisplay extends Component {
         <Typography
           color="inherit"
           className={`${classes.flex} ${classes.interaction}`}
+          onClick={this.handleCopyDate}
         >
-          <Moment
-            interval={60000}
-            onClick={this.handleCopyDate}
-            format="[Week] WW | MMM DD, YYYY | dddd"
-          />
+          {formatDate(Date.now(), "'Week' ww | MMM dd, yyyy | EEEE")}
         </Typography>
 
         <Popover

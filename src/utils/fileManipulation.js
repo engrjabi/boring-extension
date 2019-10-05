@@ -1,9 +1,8 @@
-import moment from "moment";
+import formatDate from "date-fns/format";
 
 export const downloadFile = async myData => {
-  const fileName = `${moment().format(
-    "MMM_DD_YYYY_hh_mm_A"
-  )}_boring_dashboard_backup`;
+  const currentDateAndTime = formatDate(Date.now(), "MMM_dd_yyyy_hh_mm_a");
+  const fileName = `${currentDateAndTime}_boring_dashboard_backup`;
   const json = JSON.stringify(myData);
   const blob = new Blob([json], { type: "application/json" });
   const href = await URL.createObjectURL(blob);
