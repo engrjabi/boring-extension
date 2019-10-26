@@ -15,6 +15,14 @@
       "js": [
         "contentScripts/slack.js"
       ]
+    },
+    {
+      "matches": [
+        "https://bitbucket.org/*"
+      ],
+      "js": [
+        "contentScripts/bitbucket.js"
+      ]
     }
   ]
 }
