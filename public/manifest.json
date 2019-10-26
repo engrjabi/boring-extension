@@ -4,7 +4,17 @@
   "version": "1.0",
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'sha256-186Qn3EYHS1S1DwKJ3O3xRXnWe14LB2RMcMszp71nCQ='; object-src 'self'",
-  "chrome_url_overrides" : {
+  "chrome_url_overrides": {
     "newtab": "index.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.slack.com/*"
+      ],
+      "js": [
+        "contentScripts/slack.js"
+      ]
+    }
+  ]
 }
