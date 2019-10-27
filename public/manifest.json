@@ -1,8 +1,12 @@
 {
-  "short_name": "Boring Dashboard",
-  "name": "Boring Dashboard",
+  "short_name": "Boring Extension",
+  "name": "Boring Extension",
   "version": "1.0",
   "manifest_version": 2,
+  "description": "Simple chrome extension that will make you productive by making it easier for you to navigate the web by upgrading your new tab page and extend functionalities of selected web apps",
+  "icons": {
+    "128": "rocket.png"
+  },
   "content_security_policy": "script-src 'self' 'sha256-186Qn3EYHS1S1DwKJ3O3xRXnWe14LB2RMcMszp71nCQ='; object-src 'self'",
   "permissions": [
     "storage"
