@@ -15,10 +15,23 @@ function closeSearchBox() {
 function doSearch(url = window.location.search) {
   const parsed = queryString.parse(url);
   const searchString = _get(parsed, "search");
+  const locationPathWithoutSearch = `${window.location.origin}${window.location.pathname}`;
+  const queryParamsWithoutSearch = queryString.stringify({
+    ...parsed,
+    search: undefined
+  });
 
   if (_isEmpty(searchString)) {
     return;
   }
+
+  history.pushState(
+    {},
+    null,
+    _isEmpty(queryParamsWithoutSearch)
+      ? locationPathWithoutSearch
+      : `${locationPathWithoutSearch}?${queryParamsWithoutSearch}`
+  );
 
   const activateSearch = () => getNode('[data-qa="legacy_search_header"]').click();
   const inputKeyword = () => (getNode('[data-qa="focusable_search_input"] p').innerText = searchString);
