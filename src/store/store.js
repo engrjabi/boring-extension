@@ -10,6 +10,8 @@ const initialState = {
    * @property {string} launched
    * @property {string} link
    * @property {string} title
+   * @property {number} lastOpened
+   * @property {number} lastUpdate
 
    * @type {CardProps[]}
    */

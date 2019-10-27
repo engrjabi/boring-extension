@@ -23,7 +23,8 @@ const HomePage = () => {
           if (card.id === cardId) {
             return {
               ...card,
-              launched: _toNumber(card.launched) + 1
+              launched: _toNumber(card.launched) + 1,
+              lastOpened: Date.now()
             };
           }
           return card;
@@ -37,11 +38,7 @@ const HomePage = () => {
   return (
     <div>
       <Header />
-      <CardList
-        cardList={cardList}
-        removeACard={removeACard}
-        updateClicker={updateClicker}
-      />
+      <CardList cardList={cardList} removeACard={removeACard} updateClicker={updateClicker} />
     </div>
   );
 };

@@ -4,10 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import _isEmpty from "lodash/isEmpty";
 import Button from "@material-ui/core/Button";
 import GenericTextField from "../../GenericComponents/GenericTextField";
-import {
-  arePropertiesAreEmpty,
-  validateFormInput
-} from "../../../utils/checkers";
+import { arePropertiesAreEmpty, validateFormInput } from "../../../utils/checkers";
 import { getRandomImage } from "../../../utils/randomGenerator";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,18 +13,9 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import { DoSideEffectOnMount } from "../../../utils/lifecycle";
 import { preventDefaultEvent } from "../../../utils/browserCommands";
 import { addOrEditShortcutFormStyles } from "./style";
-import {
-  debouncedSetImageData,
-  useGetFavico,
-  useGetImageData
-} from "../../../utils/imageManipulation";
+import { debouncedSetImageData, useGetFavico, useGetImageData } from "../../../utils/imageManipulation";
 
-const AddOrEditShortcutForm = ({
-  classes,
-  initialValues,
-  addACard,
-  closeModal
-}) => {
+const AddOrEditShortcutForm = ({ classes, initialValues, addACard, closeModal }) => {
   const [getImageLoading, getImageData] = useGetImageData();
   const [getFavicoLoading, getFavico] = useGetFavico();
   const gettingImageLoading = getImageLoading || getFavicoLoading;
@@ -43,7 +31,10 @@ const AddOrEditShortcutForm = ({
   };
 
   const handleSubmit = values => {
-    addACard(values);
+    addACard({
+      ...values,
+      lastUpdate: Date.now()
+    });
     closeModal();
   };
 
@@ -189,11 +180,7 @@ const AddOrEditShortcutForm = ({
                 disabled={isSubmitting || gettingImageLoading}
               >
                 {gettingImageLoading && "Getting Image"}
-                {!gettingImageLoading && (
-                  <>
-                    {_isEmpty(initialValues) ? "Add Shortcut" : "Edit Shortcut"}
-                  </>
-                )}
+                {!gettingImageLoading && <>{_isEmpty(initialValues) ? "Add Shortcut" : "Edit Shortcut"}</>}
               </Button>
             </div>
           </form>
