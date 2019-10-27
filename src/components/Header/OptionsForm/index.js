@@ -63,26 +63,35 @@ export const OptionsForm = () => {
               }}
             >
               <Typography variant="h5">Content Scripts Settings</Typography>
+
               <Fade
-                in={formik.values.lastUpdate && formik.values.crossOverFadeEffectShow}
+                in={formik.values.crossOverFadeEffectShow}
                 timeout={{
                   enter: 300,
                   exit: 1000
                 }}
               >
                 <div>
-                  <Typography
-                    variant="subtitle2"
+                  <div
                     style={{
                       opacity: 0.5
                     }}
                   >
                     {formik.values.lastUpdate
                       ? `Saved at ${formatDate(formik.values.lastUpdate, "MMM dd yyyy - hh:mm:ss a")}`
-                      : "placeholder only"}
-                  </Typography>
+                      : "Changes will take effect only on newly opened tabs."}
+                  </div>
                 </div>
               </Fade>
+
+              <div
+                style={{
+                  opacity: 0.5,
+                  marginTop: "0.3125rem"
+                }}
+              >
+                Please refresh existing tabs to update.
+              </div>
             </div>
 
             <div>
