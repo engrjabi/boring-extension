@@ -21,7 +21,7 @@
     },
     {
       "matches": [
-        "https://bitbucket.org/*"
+        "https://bitbucket.org/*pull-requests*"
       ],
       "js": [
         "contentScripts/bitbucket.js"

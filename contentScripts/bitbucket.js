@@ -1,6 +1,7 @@
 import queryString from "query-string";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
+import { chromeStorageGet, chromeStorageKeys } from "../src/utils/chromeStorage";
 
 // Text to display on the DOM link
 const slackLinkTextDom = "SLACK SEARCH";
@@ -38,8 +39,20 @@ function addSlackLinkFromClickUpTag() {
   }
 }
 
-window.setInterval(() => {
-  if (document.readyState === "complete" && window.location.href.includes("pull-requests/")) {
-    addSlackLinkFromClickUpTag();
+(async () => {
+  const isBitBucketSlackSearchEnabled = await chromeStorageGet(
+    chromeStorageKeys.options_enable_bitbucket_slack_search
+  );
+
+  if (!isBitBucketSlackSearchEnabled) {
+    return;
   }
-}, 2000);
+
+  window.setInterval(() => {
+    if (document.readyState !== "complete") {
+      return;
+    }
+
+    addSlackLinkFromClickUpTag();
+  }, 2000);
+})();
