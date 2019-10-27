@@ -7,6 +7,7 @@ import { GlobalStore } from "../../../store/store";
 import _isEmpty from "lodash/isEmpty";
 import shortid from "shortid";
 import { downloadFile, onFileSelected } from "../../../utils/fileManipulation";
+import { OptionsForm } from "../OptionsForm";
 
 const styles = () => ({
   root: {}
@@ -16,6 +17,7 @@ const MainMenuBar = ({ classes }) => {
   const store = GlobalStore.useStore();
   const cardList = store.get("cards");
   const openModal = store.get("showAddOrEditCardForm");
+  const showOptions = store.get("showOptions");
   const cardToEdit = store.get("cardToEdit");
   const inputField = useRef(null);
 
@@ -93,6 +95,10 @@ const MainMenuBar = ({ classes }) => {
           {
             label: "Import Shortcuts",
             clickAction: () => inputField && inputField.current.click()
+          },
+          {
+            label: "Settings",
+            clickAction: () => store.set("showOptions")(true)
           }
         ]}
       />
@@ -103,6 +109,15 @@ const MainMenuBar = ({ classes }) => {
           addACard={_isEmpty(cardToEdit) ? addACard : editACard}
           closeModal={handleCloseModal}
         />
+      </GenericModal>
+
+      <GenericModal
+        openStatus={showOptions}
+        handleClose={() => {
+          store.set("showOptions")(false);
+        }}
+      >
+        <OptionsForm />
       </GenericModal>
     </div>
   );

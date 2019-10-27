@@ -15,14 +15,12 @@ const initialState = {
    */
   cards: [],
   cardToEdit: {},
-  showAddOrEditCardForm: false
+  showAddOrEditCardForm: false,
+  showOptions: false
 };
 
 // Create & export a store with an initial value.
-export const GlobalStore = createConnectedStore(
-  initialState,
-  globalStoreEffects
-);
+export const GlobalStore = createConnectedStore(initialState, globalStoreEffects);
 
 export const GlobalStorePersistor = ({ children }) => {
   const store = GlobalStore.useStore();
