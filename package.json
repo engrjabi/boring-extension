@@ -23,7 +23,7 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "build:contentScripts": "parcel build contentScripts/*.js --out-dir build/contentScripts"
+    "build:contentScripts": "parcel build contentScripts/*.js --out-dir build/contentScripts --experimental-scope-hoisting"
   },
   "browserslist": {
     "production": [
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "parcel": "1.12.4",
+    "parcel-plugin-bundle-visualiser": "1.2.0",
     "prettier": "1.18.2",
     "prop-types": "15.6.2",
     "react-app-rewired": "2.1.3",
