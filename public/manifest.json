@@ -3,7 +3,7 @@
   "name": "Boring Extension",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "Simple chrome extension that will make you productive by making it easier for you to navigate the web by upgrading your new tab page and extend functionalities of selected web apps",
+  "description": "Upgrades your new tab page and extend functionalities of selected web apps",
   "icons": {
     "128": "rocket.png"
   },
