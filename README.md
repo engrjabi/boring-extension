@@ -3,7 +3,7 @@
 
 Simple chrome extension that will make you productive by making it easier for you to navigate the web by upgrading your new tab page and extend functionalities of selected web apps
 
-![Demo](https://i.ibb.co/FWrSr3K/demo-dash.gif)
+![Demo](https://i.ibb.co/Wgy7K18/ezgif-com-resize-1.gif)
 
 ## Features
 **New Tab Page**
