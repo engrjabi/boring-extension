@@ -1,4 +1,12 @@
 export const styles = theme => ({
+  labelContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "black",
+    color: "white",
+    fontWeight: "bolder"
+  },
   gridListTileBar: {
     textAlign: "left",
     height: "auto",

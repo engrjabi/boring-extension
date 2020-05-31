@@ -4,6 +4,7 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import EditIcon from "@material-ui/icons/Edit";
 import { styles } from "./styles";
 import { preventDefaultEvent } from "../../utils/browserCommands";
 import { formatLink } from "../../utils/formatters";
@@ -50,6 +51,11 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
     store.set("showAddOrEditCardForm")(true);
   };
 
+  const handleEditLabel = card => {
+    store.set("cardToEdit")(card);
+    store.set("showAddOrEditLabelForm")(true);
+  };
+
   const handleDelete = React.useCallback(
     card => {
       removeACard(card.id);
@@ -73,9 +79,8 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
   return (
     <>
       <GridLayout
-        className={classes.parentContainerLayout}
         cols={layoutDimensions.colCount}
-        rowHeight={layoutDimensions.tileSquareDimension}
+        rowHeight={layoutDimensions.tileSquareDimension / 4}
         width={layoutDimensions.limitedWidth}
         margin={[10, 10]}
         onLayoutChange={handleLayoutChange}
@@ -83,11 +88,38 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
         {cardList.map((tile, indexId) => {
           const doesImgExists = tile && tile.hasOwnProperty("imgData");
 
+          if (tile.type === "label") {
+            return (
+              <div
+                className={classes.labelContainer}
+                key={String(tile.id)}
+                data-grid={tile.layout || { x: indexId % layoutDimensions.colCount, y: 0, w: 1, h: 1 }}
+              >
+                <GenericMenu
+                  className="text--white"
+                  menuIcon={<EditIcon fontSize="small" />}
+                  id={`${classes.root}-${indexId}`}
+                  menuItems={[
+                    {
+                      label: "Edit",
+                      clickAction: () => handleEditLabel(tile)
+                    },
+                    {
+                      label: "Delete",
+                      clickAction: () => handleDelete(tile)
+                    }
+                  ]}
+                />
+                {tile.title}
+              </div>
+            );
+          }
+
           return (
             <div
               className="item"
               key={String(tile.id)}
-              data-grid={tile.layout || { x: indexId % layoutDimensions.colCount, y: 0, w: 1, h: 1 }}
+              data-grid={tile.layout || { x: indexId % layoutDimensions.colCount, y: 0, w: 1, h: 4 }}
             >
               <div className="item-content" data-id={tile.id}>
                 <ButtonBase

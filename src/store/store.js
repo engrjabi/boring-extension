@@ -17,6 +17,7 @@ const initialState = {
    */
   cards: [],
   cardToEdit: {},
+  showAddOrEditLabelForm: false,
   showAddOrEditCardForm: false,
   showOptions: false
 };

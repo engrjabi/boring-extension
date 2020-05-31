@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import GenericMenu from "../../GenericComponents/GenericMenu/index";
 import GenericModal from "../../GenericComponents/GenericModal/index";
 import AddOrEditShortcutForm from "../AddShortcutForm";
+import AddOrEditLabelForm from "../AddLabelForm";
 import { GlobalStore } from "../../../store/store";
 import _isEmpty from "lodash/isEmpty";
 import shortid from "shortid";
@@ -17,6 +18,7 @@ const MainMenuBar = ({ classes }) => {
   const store = GlobalStore.useStore();
   const cardList = store.get("cards");
   const openModal = store.get("showAddOrEditCardForm");
+  const openLabelFormModal = store.get("showAddOrEditLabelForm");
   const showOptions = store.get("showOptions");
   const cardToEdit = store.get("cardToEdit");
   const inputField = useRef(null);
@@ -55,6 +57,11 @@ const MainMenuBar = ({ classes }) => {
     store.set("cardToEdit")({});
   };
 
+  const handleCloseLabelFormModal = () => {
+    store.set("showAddOrEditLabelForm")(false);
+    store.set("cardToEdit")({});
+  };
+
   return (
     <div>
       <input
@@ -85,6 +92,10 @@ const MainMenuBar = ({ classes }) => {
         id={`${classes.root}-id`}
         menuItems={[
           {
+            label: "Add Label",
+            clickAction: () => store.set("showAddOrEditLabelForm")(true)
+          },
+          {
             label: "Add Shortcut",
             clickAction: () => store.set("showAddOrEditCardForm")(true)
           },
@@ -108,6 +119,14 @@ const MainMenuBar = ({ classes }) => {
           initialValues={cardToEdit}
           addACard={_isEmpty(cardToEdit) ? addACard : editACard}
           closeModal={handleCloseModal}
+        />
+      </GenericModal>
+
+      <GenericModal openStatus={openLabelFormModal} handleClose={handleCloseLabelFormModal}>
+        <AddOrEditLabelForm
+          initialValues={cardToEdit}
+          addACard={_isEmpty(cardToEdit) ? addACard : editACard}
+          closeModal={handleCloseLabelFormModal}
         />
       </GenericModal>
 
