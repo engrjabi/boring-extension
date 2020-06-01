@@ -119,7 +119,7 @@ const CardList = ({ classes, cardList, updateClicker, removeACard }) => {
             <div
               className="item"
               key={String(tile.id)}
-              data-grid={tile.layout || { x: indexId % layoutDimensions.colCount, y: 0, w: 1, h: 4 }}
+              data-grid={tile.layout || { x: indexId % layoutDimensions.colCount, y: 0, w: 1, h: 3 }}
             >
               <div className="item-content" data-id={tile.id}>
                 <ButtonBase
