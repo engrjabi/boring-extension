@@ -1,6 +1,7 @@
-.grid {
-  position: relative;
+.react-grid-layout {
+  padding-left: 10px;
 }
+
 .item {
   display: block;
   position: absolute;
@@ -9,15 +10,7 @@
   border: 1px solid black;
   border-radius: 10px;
 }
-.item.muuri-item-dragging {
-  z-index: 3;
-}
-.item.muuri-item-releasing {
-  z-index: 2;
-}
-.item.muuri-item-hidden {
-  z-index: 0;
-}
+
 .item-content {
   position: relative;
   width: 100%;
