@@ -6,5 +6,5 @@ export function getRandomInt(min, max) {
 
 export const getRandomImage = () => {
   const imageRepoURL = "https://robohash.org";
-  return `${imageRepoURL}/${getRandomInt(1, 100000)}`;
+  return `${imageRepoURL}/${getRandomInt(1, 100000)}?size=140x140&set=any`;
 };
