@@ -9,7 +9,7 @@
     "date-fns": "2.4.1",
     "formik": "1.5.8",
     "localforage": "1.7.3",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "muuri": "^0.8.0",
     "preact": "10.0.0",
     "query-string": "6.8.3",
